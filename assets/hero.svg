@@ -137,9 +137,6 @@
       <text x="28" y="19" class="sans" font-size="11.5" fill="#d4d4d8">hnminh.work@gmail.com</text>
     </g>
 
-    <!-- Section Index Hint -->
-    <text x="716" y="19" text-anchor="end" class="mono" font-size="10.5" fill="#71717a">01 · TECHNICAL STACK   ·   02 · PINNED REPOS ↓</text>
-
     <!-- Primary Portfolio CTA Pill -->
     <g transform="translate(732, 0)">
       <rect x="0" y="0" width="276" height="30" rx="9" fill="#818cf8" />

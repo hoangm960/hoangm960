@@ -8,10 +8,6 @@
 
 <br />
 
-<!-- ===================================================================== -->
-<!-- 01 / CAPABILITIES — TECHNICAL STACK BY LAYER                          -->
-<!-- ===================================================================== -->
-
 <div align="center">
-  <img src="./assets/skills.svg" alt="01 / Capabilities — Technical Stack by Layer" width="100%" />
+  <img src="./assets/skills.svg" alt="Technical Stack" width="100%" />
 </div>

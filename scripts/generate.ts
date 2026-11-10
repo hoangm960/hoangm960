@@ -1,14 +1,14 @@
-import { mkdirSync, rmSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { join, resolve } from "node:path";
 import {
     personalInfo,
     projects,
     skillCategories,
-    type Skill,
 } from "../../portfolio/src/lib/data";
 
 const ROOT = resolve(import.meta.dir, "..");
 const ASSETS_DIR = join(ROOT, "assets");
+const ICON_CACHE_PATH = join(import.meta.dir, "icons-cache.json");
 
 // Clean up any legacy project and dispatch assets
 rmSync(join(ASSETS_DIR, "projects"), { recursive: true, force: true });
@@ -18,6 +18,133 @@ mkdirSync(ASSETS_DIR, { recursive: true });
 
 const PORTFOLIO_URL = "https://hoangm960.github.io/";
 const CURRENT_YEAR = new Date().getFullYear();
+
+type CuratedSkill = {
+    name: string;
+    icon: string;
+    color?: string;
+};
+
+type CuratedLayer = {
+    name: string;
+    skills: CuratedSkill[];
+};
+
+const CURATED_STACK: CuratedLayer[] = [
+    {
+        name: "Languages",
+        skills: [
+            { name: "Python", icon: "logos:python" },
+            { name: "TypeScript", icon: "logos:typescript-icon" },
+            { name: "JavaScript", icon: "logos:javascript" },
+            { name: "C++", icon: "logos:c-plusplus" },
+            { name: "C", icon: "logos:c" },
+            { name: "SQL", icon: "vscode-icons:file-type-sql" },
+        ],
+    },
+    {
+        name: "Frontend",
+        skills: [
+            { name: "React", icon: "logos:react" },
+            { name: "Next.js", icon: "simple-icons:nextdotjs", color: "#ffffff" },
+            { name: "Tailwind CSS", icon: "logos:tailwindcss-icon" },
+            { name: "Zustand", icon: "devicon:zustand" },
+            { name: "Three.js", icon: "simple-icons:threedotjs", color: "#ffffff" },
+        ],
+    },
+    {
+        name: "Backend & AI",
+        skills: [
+            { name: "Node.js", icon: "logos:nodejs-icon" },
+            { name: "Express.js", icon: "simple-icons:express", color: "#ffffff" },
+            { name: "FastAPI", icon: "logos:fastapi-icon" },
+            { name: "Flask", icon: "simple-icons:flask", color: "#ffffff" },
+            { name: "LangGraph", icon: "simple-icons:langchain", color: "#5eead4" },
+            { name: "Socket.io", icon: "simple-icons:socketdotio", color: "#ffffff" },
+        ],
+    },
+    {
+        name: "Database",
+        skills: [
+            { name: "MySQL", icon: "devicon:mysql" },
+            { name: "MongoDB", icon: "logos:mongodb-icon" },
+            { name: "SQLite", icon: "devicon:sqlite" },
+            { name: "Firebase", icon: "logos:firebase-icon" },
+            { name: "FAISS", icon: "simple-icons:meta", color: "#60a5fa" },
+        ],
+    },
+    {
+        name: "System & Embedded",
+        skills: [
+            { name: "Linux", icon: "logos:linux-tux" },
+            { name: "FreeRTOS", icon: "lucide:cpu", color: "#4ade80" },
+            { name: "ESP32", icon: "simple-icons:espressif", color: "#f87171" },
+            { name: "Raspberry Pi", icon: "logos:raspberry-pi" },
+            { name: "OpenCV", icon: "logos:opencv" },
+            { name: "TensorFlow", icon: "logos:tensorflow" },
+        ],
+    },
+    {
+        name: "Tools & Testing",
+        skills: [
+            { name: "Git", icon: "logos:git-icon" },
+            { name: "GitHub Actions", icon: "logos:github-actions" },
+            { name: "Vite", icon: "logos:vitejs" },
+            { name: "Playwright", icon: "logos:playwright" },
+            { name: "Jest", icon: "logos:jest" },
+            { name: "Pytest", icon: "devicon:pytest" },
+        ],
+    },
+];
+
+async function loadIconMap(): Promise<Record<string, string>> {
+    const cache: Record<string, string> = existsSync(ICON_CACHE_PATH)
+        ? JSON.parse(readFileSync(ICON_CACHE_PATH, "utf-8"))
+        : {};
+
+    let updated = false;
+    for (const layer of CURATED_STACK) {
+        for (const skill of layer.skills) {
+            const key = skill.color ? `${skill.icon}?color=${skill.color}` : skill.icon;
+            if (!cache[key]) {
+                const [prefix, name] = skill.icon.split(":");
+                const url = skill.color
+                    ? `https://api.iconify.design/${prefix}/${name}.svg?color=${encodeURIComponent(skill.color)}`
+                    : `https://api.iconify.design/${prefix}/${name}.svg`;
+                const res = await fetch(url);
+                if (!res.ok) {
+                    throw new Error(`Failed to fetch icon ${skill.icon}: ${res.status}`);
+                }
+                cache[key] = await res.text();
+                updated = true;
+            }
+        }
+    }
+
+    if (updated) {
+        writeFileSync(ICON_CACHE_PATH, JSON.stringify(cache, null, 2));
+    }
+    return cache;
+}
+
+function inlineSvgIcon(rawSvg: string, x: number, y: number, size: number, uid: string): string {
+    const viewBoxMatch = rawSvg.match(/viewBox="([^"]+)"/);
+    const viewBox = viewBoxMatch ? viewBoxMatch[1] : "0 0 24 24";
+
+    let inner = rawSvg
+        .replace(/^[\s\S]*?<svg[^>]*>/i, "")
+        .replace(/<\/svg>\s*$/i, "")
+        .trim();
+
+    // Namespace all internal IDs to prevent collisions across icons in the same SVG document
+    inner = inner
+        .replace(/\bid="([^"]+)"/g, `id="${uid}-$1"`)
+        .replace(/url\(#([^)]+)\)/g, `url(#${uid}-$1)`)
+        .replace(/\bhref="#([^"]+)"/g, `href="#${uid}-$1"`)
+        .replace(/\bxlink:href="#([^"]+)"/g, `xlink:href="#${uid}-$1"`);
+
+    return `<svg x="${x}" y="${y}" width="${size}" height="${size}" viewBox="${viewBox}">${inner}</svg>`;
+}
 
 function esc(str: string): string {
     return str
@@ -64,11 +191,11 @@ function estimateTextWidth(text: string, fontSize: number, isMono = false): numb
     }
     let width = 0;
     for (const ch of text) {
-        if ("ilI1|.,:;'!/ ".includes(ch)) width += fontSize * 0.27;
-        else if ("fjt()[]-".includes(ch)) width += fontSize * 0.35;
-        else if ("mwMW@#%&QGO0".includes(ch)) width += fontSize * 0.74;
-        else if (ch === ch.toUpperCase() && ch !== ch.toLowerCase()) width += fontSize * 0.62;
-        else width += fontSize * 0.51;
+        if ("ilI1|.,:;'!/ ".includes(ch)) width += fontSize * 0.28;
+        else if ("fjt()[]-".includes(ch)) width += fontSize * 0.36;
+        else if ("mwMW@#%&QGO0+".includes(ch)) width += fontSize * 0.74;
+        else if (ch === ch.toUpperCase() && ch !== ch.toLowerCase()) width += fontSize * 0.63;
+        else width += fontSize * 0.53;
     }
     return Math.ceil(width);
 }
@@ -87,70 +214,6 @@ const totalTechnologies = skillCategories.reduce(
 
 const FONT_SANS = `'Geist', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif`;
 const FONT_MONO = `'Geist Mono', 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace`;
-
-const SKILL_BRAND_COLORS: Record<string, string> = {
-    Python: "#38bdf8",
-    TypeScript: "#3b82f6",
-    JavaScript: "#facc15",
-    "C++": "#60a5fa",
-    C: "#93c5fd",
-    Java: "#fb923c",
-    SQL: "#38bdf8",
-    Dart: "#2dd4bf",
-    React: "#61dafb",
-    "Next.js": "#ffffff",
-    Zustand: "#f59e0b",
-    "TanStack Query": "#ef4444",
-    "Tailwind CSS": "#38bdf8",
-    "Three.js": "#e4e4e7",
-    "HTML5 Canvas": "#fb923c",
-    "Framer Motion": "#c084fc",
-    Recharts: "#38bdf8",
-    SolidJS: "#60a5fa",
-    Flutter: "#38bdf8",
-    HTML: "#f97316",
-    CSS: "#3b82f6",
-    Zod: "#60a5fa",
-    "Node.js": "#4ade80",
-    "Express.js": "#e4e4e7",
-    FastAPI: "#14b8a6",
-    Flask: "#e4e4e7",
-    LangGraph: "#5eead4",
-    "Socket.io": "#ffffff",
-    WebSockets: "#818cf8",
-    "REST APIs": "#38bdf8",
-    PDFKit: "#f87171",
-    MySQL: "#38bdf8",
-    MongoDB: "#4ade80",
-    SQLite: "#60a5fa",
-    "Firebase / Firestore": "#fbbf24",
-    SQLAlchemy: "#f87171",
-    FAISS: "#60a5fa",
-    Linux: "#facc15",
-    FreeRTOS: "#f87171",
-    ESP32: "#34d399",
-    "Raspberry Pi": "#f43f5e",
-    Arduino: "#2dd4bf",
-    MQTT: "#c084fc",
-    OpenCV: "#4ade80",
-    MediaPipe: "#2dd4bf",
-    "TensorFlow Lite Micro": "#fb923c",
-    "SciPy / NumPy": "#60a5fa",
-    Git: "#f97316",
-    "GitHub Actions": "#60a5fa",
-    Vite: "#a855f7",
-    Jest: "#f43f5e",
-    Playwright: "#4ade80",
-    Vitest: "#a3e635",
-    Pytest: "#38bdf8",
-    Supertest: "#818cf8",
-    ANTLR4: "#f87171",
-    PlatformIO: "#fb923c",
-    Vercel: "#ffffff",
-    npm: "#ef4444",
-    Yarn: "#38bdf8",
-    Bun: "#f472b6",
-};
 
 function generateHeroSvg(): string {
     const bioLines = wrapText(personalInfo.bio, 138, 3);
@@ -298,9 +361,6 @@ function generateHeroSvg(): string {
       <text x="28" y="19" class="sans" font-size="11.5" fill="#d4d4d8">${esc(personalInfo.email)}</text>
     </g>
 
-    <!-- Section Index Hint -->
-    <text x="716" y="19" text-anchor="end" class="mono" font-size="10.5" fill="#71717a">01 · TECHNICAL STACK   ·   02 · PINNED REPOS ↓</text>
-
     <!-- Primary Portfolio CTA Pill -->
     <g transform="translate(732, 0)">
       <rect x="0" y="0" width="276" height="30" rx="9" fill="#818cf8" />
@@ -311,44 +371,43 @@ function generateHeroSvg(): string {
 `;
 }
 
-function renderSkillGlyph(skill: Skill, cx: number, cy: number): string {
-    const color = SKILL_BRAND_COLORS[skill.name] || skill.bgColor || "#818cf8";
-    if (skill.icon === null) {
-        return `<path d="M${cx} ${cy - 5} L${cx + 1.4} ${cy - 1.4} L${cx + 5} ${cy} L${cx + 1.4} ${cy + 1.4} L${cx} ${cy + 5} L${cx - 1.4} ${cy + 1.4} L${cx - 5} ${cy} L${cx - 1.4} ${cy - 1.4} Z" fill="#818cf8" />`;
-    }
-    return `<circle cx="${cx}" cy="${cy}" r="3.8" fill="${color}" />`;
-}
-
-function generateSkillsSvg(): string {
-    const sortedCategories = [...skillCategories].sort((a, b) => a.order - b.order);
-
-    let currentY = 86;
+function generateSkillsSvg(iconMap: Record<string, string>): string {
+    const outerPad = 18;
+    let currentY = outerPad;
     const categoryBlocks: string[] = [];
 
-    const pillStartX = 224;
-    const maxPillRightX = 1054;
-    const pillHeight = 28;
-    const pillGapX = 8;
-    const pillGapY = 8;
+    const pillStartX = 228;
+    const maxPillRightX = 1040;
+    const pillHeight = 42;
+    const iconSize = 20;
+    const pillGapX = 10;
+    const pillGapY = 10;
 
-    for (const category of sortedCategories) {
+    let iconCounter = 0;
+
+    for (const category of CURATED_STACK) {
         let rowX = pillStartX;
         let rowY = 16;
         const pillsSvg: string[] = [];
 
         for (const skill of category.skills) {
-            const textW = estimateTextWidth(skill.name, 12, false);
-            const pillW = 24 + textW + 12;
+            const textW = estimateTextWidth(skill.name, 14, false);
+            const pillW = 14 + iconSize + 10 + textW + 16;
 
             if (rowX + pillW > maxPillRightX) {
                 rowX = pillStartX;
                 rowY += pillHeight + pillGapY;
             }
 
+            const key = skill.color ? `${skill.icon}?color=${skill.color}` : skill.icon;
+            const rawIcon = iconMap[key];
+            const uid = `ico${++iconCounter}`;
+            const iconSvg = inlineSvgIcon(rawIcon, 14, (pillHeight - iconSize) / 2, iconSize, uid);
+
             pillsSvg.push(`<g transform="translate(${rowX}, ${rowY})">
-        <rect x="0" y="0" width="${pillW}" height="${pillHeight}" rx="8" fill="#090814" stroke="#1e1b4b" stroke-width="1" />
-        ${renderSkillGlyph(skill, 13, pillHeight / 2)}
-        <text x="23" y="18.5" class="sans" font-size="12" fill="#d4d4d8">${esc(skill.name)}</text>
+        <rect x="0" y="0" width="${pillW}" height="${pillHeight}" rx="11" fill="#090814" stroke="#1e1b4b" stroke-width="1.3" />
+        ${iconSvg}
+        <text x="${14 + iconSize + 10}" y="26" class="sans" font-size="14" font-weight="600" fill="#f4f4f5">${esc(skill.name)}</text>
       </g>`);
 
             rowX += pillW + pillGapX;
@@ -356,20 +415,19 @@ function generateSkillsSvg(): string {
 
         const cardHeight = rowY + pillHeight + 16;
 
-        categoryBlocks.push(`<g transform="translate(0, ${currentY})">
-    <rect x="1" y="0" width="1078" height="${cardHeight}" rx="18" fill="#121126" fill-opacity="0.85" stroke="#1e1b4b" stroke-width="1.4" />
-    <text x="24" y="27" class="mono" font-size="12" font-weight="700" fill="#818cf8" letter-spacing="0.8">${esc(category.name.toUpperCase())}</text>
-    <text x="24" y="45" class="sans" font-size="11.5" fill="#71717a">${category.skills.length} tools</text>
-    <line x1="204" y1="14" x2="204" y2="${cardHeight - 14}" stroke="#1e1b4b" stroke-width="1" />
+        categoryBlocks.push(`<g transform="translate(${outerPad}, ${currentY})">
+    <rect x="0" y="0" width="${1080 - outerPad * 2}" height="${cardHeight}" rx="16" fill="#121126" fill-opacity="0.9" stroke="#1e1b4b" stroke-width="1.4" />
+    <text x="24" y="${cardHeight / 2 + 4.5}" class="mono" font-size="13" font-weight="700" fill="#818cf8" letter-spacing="0.8">${esc(category.name.toUpperCase())}</text>
+    <line x1="206" y1="14" x2="206" y2="${cardHeight - 14}" stroke="#1e1b4b" stroke-width="1.2" />
     ${pillsSvg.join("\n    ")}
   </g>`);
 
-        currentY += cardHeight + 14;
+        currentY += cardHeight + 12;
     }
 
-    const totalHeight = currentY + 4;
+    const totalHeight = currentY - 12 + outerPad;
 
-    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 ${totalHeight}" width="100%" role="img" aria-label="01 / Capabilities — Technical Stack by Layer">
+    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 ${totalHeight}" width="100%" role="img" aria-label="Technical Stack">
   <defs>
     <style>
       .sans { font-family: ${FONT_SANS}; }
@@ -377,20 +435,8 @@ function generateSkillsSvg(): string {
     </style>
   </defs>
 
-  <rect x="0" y="0" width="1080" height="${totalHeight}" rx="18" fill="#090814" />
+  <rect x="1" y="1" width="1078" height="${totalHeight - 2}" rx="24" fill="#090814" stroke="#1e1b4b" stroke-width="1.8" />
 
-  <!-- Section Header -->
-  <text x="4" y="22" class="mono" font-size="11" font-weight="600" fill="#818cf8" letter-spacing="1.6">01 / CAPABILITIES</text>
-  <text x="4" y="48" class="sans" font-size="20" font-weight="700" fill="#ffffff" letter-spacing="-0.3">Technical Stack by Layer</text>
-
-  <g transform="translate(888, 22)">
-    <rect x="0" y="0" width="190" height="28" rx="8" fill="#121126" stroke="#1e1b4b" stroke-width="1" />
-    <text x="95" y="18" text-anchor="middle" class="mono" font-size="11" fill="#a1a1aa">${skillCategories.length} DOMAINS · ${totalTechnologies} TOOLS</text>
-  </g>
-
-  <line x1="0" y1="68" x2="1080" y2="68" stroke="#1e1b4b" stroke-width="1.5" />
-
-  <!-- 6 Layer Cards -->
   ${categoryBlocks.join("\n  ")}
 </svg>
 `;
@@ -407,21 +453,17 @@ function generateReadme(): string {
 
 <br />
 
-<!-- ===================================================================== -->
-<!-- 01 / CAPABILITIES — TECHNICAL STACK BY LAYER                          -->
-<!-- ===================================================================== -->
-
 <div align="center">
-  <img src="./assets/skills.svg" alt="01 / Capabilities — Technical Stack by Layer" width="100%" />
+  <img src="./assets/skills.svg" alt="Technical Stack" width="100%" />
 </div>
 `;
 }
 
-// Write all SVG assets
+const iconMap = await loadIconMap();
 writeFileSync(join(ASSETS_DIR, "hero.svg"), generateHeroSvg());
-writeFileSync(join(ASSETS_DIR, "skills.svg"), generateSkillsSvg());
+writeFileSync(join(ASSETS_DIR, "skills.svg"), generateSkillsSvg(iconMap));
 writeFileSync(join(ROOT, "README.md"), generateReadme());
 
 console.log(
-    `Generated GitHub profile assets from ../portfolio/src/lib/data.ts (${totalProjects} projects, ${totalTechnologies} skills across ${skillCategories.length} layers).`,
+    `Generated GitHub profile assets with real vector logos (${CURATED_STACK.reduce((s, c) => s + c.skills.length, 0)} core tools across ${CURATED_STACK.length} layers).`,
 );
