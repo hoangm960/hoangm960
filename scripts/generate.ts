@@ -4,49 +4,20 @@ import {
     personalInfo,
     projects,
     skillCategories,
-    socialLinks,
-    type Project,
     type Skill,
 } from "../../portfolio/src/lib/data";
 
 const ROOT = resolve(import.meta.dir, "..");
 const ASSETS_DIR = join(ROOT, "assets");
-const DISPATCH_DIR = join(ASSETS_DIR, "dispatch");
 
-// Clean up any legacy project card assets
+// Clean up any legacy project and dispatch assets
 rmSync(join(ASSETS_DIR, "projects"), { recursive: true, force: true });
+rmSync(join(ASSETS_DIR, "dispatch"), { recursive: true, force: true });
 rmSync(join(ASSETS_DIR, "section-projects.svg"), { force: true });
-mkdirSync(DISPATCH_DIR, { recursive: true });
+mkdirSync(ASSETS_DIR, { recursive: true });
 
 const PORTFOLIO_URL = "https://hoangm960.github.io/";
 const CURRENT_YEAR = new Date().getFullYear();
-
-export type DomainFilter = "web" | "ai" | "systems";
-
-function getProjectDomain(project: Project): DomainFilter {
-    const stack = project.techStack.join(" ").toLowerCase();
-    const desc = project.description.toLowerCase();
-    if (
-        stack.includes("esp32") ||
-        stack.includes("freertos") ||
-        stack.includes("c++") ||
-        stack.includes("posix") ||
-        stack.includes("antlr4") ||
-        stack.includes("arduino")
-    ) {
-        return "systems";
-    }
-    if (
-        stack.includes("langgraph") ||
-        stack.includes("gemini") ||
-        stack.includes("mediapipe") ||
-        stack.includes("scipy") ||
-        desc.includes("agent")
-    ) {
-        return "ai";
-    }
-    return "web";
-}
 
 function esc(str: string): string {
     return str
@@ -113,10 +84,6 @@ const totalTechnologies = skillCategories.reduce(
     (sum, category) => sum + category.skills.length,
     0,
 );
-
-const webProjects = projects.filter((p) => getProjectDomain(p) === "web");
-const aiProjects = projects.filter((p) => getProjectDomain(p) === "ai");
-const systemsProjects = projects.filter((p) => getProjectDomain(p) === "systems");
 
 const FONT_SANS = `'Geist', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif`;
 const FONT_MONO = `'Geist Mono', 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace`;
@@ -331,14 +298,8 @@ function generateHeroSvg(): string {
       <text x="28" y="19" class="sans" font-size="11.5" fill="#d4d4d8">${esc(personalInfo.email)}</text>
     </g>
 
-    <!-- University Pill -->
-    <g transform="translate(358, 0)">
-      <rect x="0" y="0" width="78" height="30" rx="8" fill="#121126" stroke="#1e1b4b" stroke-width="1" />
-      <text x="39" y="19" text-anchor="middle" class="mono" font-size="11" font-weight="600" fill="#818cf8">FUV CS</text>
-    </g>
-
     <!-- Section Index Hint -->
-    <text x="716" y="19" text-anchor="end" class="mono" font-size="10.5" fill="#71717a">01 · STACK   ·   02 · DISPATCH   ·   PINNED ↓</text>
+    <text x="716" y="19" text-anchor="end" class="mono" font-size="10.5" fill="#71717a">01 · TECHNICAL STACK   ·   02 · PINNED REPOS ↓</text>
 
     <!-- Primary Portfolio CTA Pill -->
     <g transform="translate(732, 0)">
@@ -435,60 +396,7 @@ function generateSkillsSvg(): string {
 `;
 }
 
-function generateDispatchHeaderSvg(): string {
-    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 128" width="100%" role="img" aria-label="02 / Dispatch — Start a Conversation">
-  <defs>
-    <style>
-      .sans { font-family: ${FONT_SANS}; }
-      .mono { font-family: ${FONT_MONO}; }
-    </style>
-  </defs>
-
-  <rect x="0" y="0" width="1080" height="128" rx="16" fill="#090814" />
-  <text x="4" y="22" class="mono" font-size="11" font-weight="600" fill="#818cf8" letter-spacing="1.6">02 / DISPATCH</text>
-  <text x="4" y="48" class="sans" font-size="20" font-weight="700" fill="#ffffff" letter-spacing="-0.3">Start a Conversation</text>
-  <line x1="0" y1="64" x2="1080" y2="64" stroke="#1e1b4b" stroke-width="1.5" />
-
-  <rect x="1" y="76" width="1078" height="48" rx="14" fill="#121126" stroke="#1e1b4b" stroke-width="1.2" />
-  <circle cx="24" cy="100" r="4" fill="#818cf8">
-    <animate attributeName="opacity" values="1;0.35;1" dur="2.2s" repeatCount="indefinite" />
-  </circle>
-  <text x="38" y="104" class="sans" font-size="12.5" fill="#e4e4e7">Open to Full-Stack, AI Agent &amp; Embedded/Systems Engineering Opportunities</text>
-  <text x="1056" y="104" text-anchor="end" class="mono" font-size="11.5" fill="#818cf8">Direct: ${esc(personalInfo.email)} · ${esc(personalInfo.location)}</text>
-</svg>
-`;
-}
-
-function generateDispatchButtonSvg(opts: {
-    label: string;
-    primary?: boolean;
-    width: number;
-}): string {
-    const fill = opts.primary ? "#818cf8" : "#121126";
-    const stroke = opts.primary ? "#818cf8" : "#1e1b4b";
-    const textFill = opts.primary ? "#090814" : "#e4e4e7";
-    const weight = opts.primary ? "700" : "600";
-
-    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${opts.width} 42" width="${opts.width}" height="42" role="img" aria-label="${esc(opts.label)}">
-  <defs>
-    <style>
-      .sans { font-family: ${FONT_SANS}; }
-    </style>
-  </defs>
-  <rect x="1" y="1" width="${opts.width - 2}" height="40" rx="11" fill="${fill}" stroke="${stroke}" stroke-width="1.4" />
-  <text x="${opts.width / 2}" y="25.5" text-anchor="middle" class="sans" font-size="12.5" font-weight="${weight}" fill="${textFill}">${esc(opts.label)}</text>
-</svg>
-`;
-}
-
 function generateReadme(): string {
-    const linkedinUrl =
-        socialLinks.find((s) => s.platform === "linkedin")?.url ||
-        "https://www.linkedin.com/in/minh-hoang-tech/";
-    const facebookUrl =
-        socialLinks.find((s) => s.platform === "facebook")?.url ||
-        "https://www.facebook.com/daylaminhne2901/";
-
     return `<!-- AUTO-GENERATED FROM ../portfolio/src/lib/data.ts — Run \`bun run generate\` to sync -->
 
 <div align="center">
@@ -506,77 +414,12 @@ function generateReadme(): string {
 <div align="center">
   <img src="./assets/skills.svg" alt="01 / Capabilities — Technical Stack by Layer" width="100%" />
 </div>
-
-<br />
-
-<!-- ===================================================================== -->
-<!-- 02 / DISPATCH — CONTACT & LINKS                                       -->
-<!-- ===================================================================== -->
-
-<div align="center">
-  <img src="./assets/dispatch/header.svg" alt="02 / Dispatch — Start a Conversation" width="100%" />
-</div>
-
-<p align="center">
-  <a href="${PORTFOLIO_URL}">
-    <img src="./assets/dispatch/btn-portfolio.svg" alt="Interactive Portfolio — hoangm960.github.io" height="42" />
-  </a>
-  &nbsp;
-  <a href="mailto:${personalInfo.email}">
-    <img src="./assets/dispatch/btn-email.svg" alt="Email ${personalInfo.email}" height="42" />
-  </a>
-  &nbsp;
-  <a href="${linkedinUrl}">
-    <img src="./assets/dispatch/btn-linkedin.svg" alt="LinkedIn" height="42" />
-  </a>
-  &nbsp;
-  <a href="${facebookUrl}">
-    <img src="./assets/dispatch/btn-facebook.svg" alt="Facebook" height="42" />
-  </a>
-</p>
-
-<hr />
-
-<p align="center">
-  <sub>Designed &amp; Built by <strong><a href="${PORTFOLIO_URL}">${personalInfo.name}</a></strong> · ${CURRENT_YEAR}</sub>
-</p>
 `;
 }
 
 // Write all SVG assets
 writeFileSync(join(ASSETS_DIR, "hero.svg"), generateHeroSvg());
 writeFileSync(join(ASSETS_DIR, "skills.svg"), generateSkillsSvg());
-writeFileSync(join(DISPATCH_DIR, "header.svg"), generateDispatchHeaderSvg());
-writeFileSync(
-    join(DISPATCH_DIR, "btn-portfolio.svg"),
-    generateDispatchButtonSvg({
-        label: "Interactive Portfolio · hoangm960.github.io ↗",
-        primary: true,
-        width: 318,
-    }),
-);
-writeFileSync(
-    join(DISPATCH_DIR, "btn-email.svg"),
-    generateDispatchButtonSvg({
-        label: `✉ ${personalInfo.email}`,
-        width: 224,
-    }),
-);
-writeFileSync(
-    join(DISPATCH_DIR, "btn-linkedin.svg"),
-    generateDispatchButtonSvg({
-        label: "in · minh-hoang-tech ↗",
-        width: 196,
-    }),
-);
-writeFileSync(
-    join(DISPATCH_DIR, "btn-facebook.svg"),
-    generateDispatchButtonSvg({
-        label: "Facebook ↗",
-        width: 132,
-    }),
-);
-
 writeFileSync(join(ROOT, "README.md"), generateReadme());
 
 console.log(

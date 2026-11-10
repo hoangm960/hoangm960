@@ -137,14 +137,8 @@
       <text x="28" y="19" class="sans" font-size="11.5" fill="#d4d4d8">hnminh.work@gmail.com</text>
     </g>
 
-    <!-- University Pill -->
-    <g transform="translate(358, 0)">
-      <rect x="0" y="0" width="78" height="30" rx="8" fill="#121126" stroke="#1e1b4b" stroke-width="1" />
-      <text x="39" y="19" text-anchor="middle" class="mono" font-size="11" font-weight="600" fill="#818cf8">FUV CS</text>
-    </g>
-
     <!-- Section Index Hint -->
-    <text x="716" y="19" text-anchor="end" class="mono" font-size="10.5" fill="#71717a">01 · STACK   ·   02 · DISPATCH   ·   PINNED ↓</text>
+    <text x="716" y="19" text-anchor="end" class="mono" font-size="10.5" fill="#71717a">01 · TECHNICAL STACK   ·   02 · PINNED REPOS ↓</text>
 
     <!-- Primary Portfolio CTA Pill -->
     <g transform="translate(732, 0)">
