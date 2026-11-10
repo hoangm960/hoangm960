@@ -109,10 +109,10 @@
   <!-- Section Jump Nav Strip (Translating SidebarPane nav) -->
   <g transform="translate(32, 372)">
     <rect x="0" y="0" width="436" height="52" rx="12" fill="#121126" fill-opacity="0.55" stroke="#1e1b4b" stroke-width="1" />
-    <text x="14" y="21" class="mono" font-size="10" font-weight="600" fill="#818cf8" letter-spacing="0.8">README INDEX // SECTIONS</text>
-    <text x="14" y="39" class="mono" font-size="10.5" fill="#a1a1aa">01 · PROJECTS (12)</text>
-    <text x="158" y="39" class="mono" font-size="10.5" fill="#a1a1aa">02 · STACK (6 LAYERS)</text>
-    <text x="318" y="39" class="mono" font-size="10.5" fill="#a1a1aa">03 · DISPATCH</text>
+    <text x="14" y="21" class="mono" font-size="10" font-weight="600" fill="#818cf8" letter-spacing="0.8">PROFILE // NAVIGATION</text>
+    <text x="14" y="39" class="mono" font-size="10.5" fill="#a1a1aa">01 · STACK (6 LAYERS)</text>
+    <text x="176" y="39" class="mono" font-size="10.5" fill="#a1a1aa">02 · DISPATCH</text>
+    <text x="292" y="39" class="mono" font-size="10.5" fill="#a1a1aa">03 · PINNED REPOS ↓</text>
   </g>
 
   <!-- Bottom Location & Contact Pills -->
@@ -138,7 +138,7 @@
   </g>
 
   <!-- ================================================================= -->
-  <!-- RIGHT PANE: SYSTEM ARCHITECTURE · 03 DOMAINS INSPECTOR CARD       -->
+  <!-- RIGHT PANE: SYSTEM ARCHITECTURE · 03 DOMAINS OVERVIEW CARD        -->
   <!-- ================================================================= -->
   <g transform="translate(520, 26)">
     <!-- Outer Inspector Card -->
@@ -155,9 +155,9 @@
         <animate attributeName="r" values="4;10;4" dur="2s" repeatCount="indefinite" />
         <animate attributeName="opacity" values="0.7;0;0.7" dur="2s" repeatCount="indefinite" />
       </circle>
-      <text x="29" y="18" class="mono" font-size="10.5" font-weight="600" fill="#818cf8">INSPECTOR · HCMC UTC+7</text>
+      <text x="29" y="18" class="mono" font-size="10.5" font-weight="600" fill="#818cf8">ONLINE · HCMC UTC+7</text>
 
-      <!-- Right Counter + Esc Keycap -->
+      <!-- Right Counter + Live Badge -->
       <text x="434" y="18" text-anchor="end" class="mono" font-size="11" fill="#a1a1aa">#01–#12 / 03 DOMAINS</text>
       <rect x="444" y="3" width="40" height="22" rx="6" fill="#090814" stroke="#1e1b4b" stroke-width="1" />
       <text x="464" y="17.5" text-anchor="middle" class="mono" font-size="10" fill="#a1a1aa">LIVE</text>
@@ -165,7 +165,7 @@
 
     <line x1="22" y1="58" x2="506" y2="58" stroke="#1e1b4b" stroke-width="1" />
 
-    <!-- Inspector Title & Badge -->
+    <!-- Overview Title & Badge -->
     <g transform="translate(22, 72)">
       <rect x="0" y="0" width="212" height="22" rx="11" fill="#818cf8" fill-opacity="0.12" stroke="#818cf8" stroke-opacity="0.3" stroke-width="1" />
       <text x="106" y="14.5" text-anchor="middle" class="mono" font-size="10" font-weight="600" fill="#818cf8">ARCHITECTURE OVERVIEW</text>
@@ -218,13 +218,13 @@
       <text x="16" y="64" class="mono" font-size="10.5" fill="#a1a1aa">ESP32 FreeRTOS · TFLite Micro · RPi MQTT · ANTLR4 · POSIX C</text>
     </g>
 
-    <!-- Bottom Inspector CTA Bar -->
+    <!-- Bottom CTA Bar -->
     <line x1="22" y1="404" x2="506" y2="404" stroke="#1e1b4b" stroke-width="1" />
     <g transform="translate(22, 415)">
       <rect x="0" y="0" width="276" height="30" rx="9" fill="#818cf8" />
       <text x="138" y="19.5" text-anchor="middle" class="sans" font-size="11.5" font-weight="700" fill="#090814">Interactive Portfolio · hoangm960.github.io ↗</text>
 
-      <text x="484" y="19.5" text-anchor="end" class="mono" font-size="10.5" fill="#a1a1aa">↓ Expand case studies</text>
+      <text x="484" y="19.5" text-anchor="end" class="mono" font-size="10.5" fill="#a1a1aa">↓ See Pinned Repos below</text>
     </g>
   </g>
 </svg>

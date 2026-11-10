@@ -1,4 +1,4 @@
-import { mkdirSync, writeFileSync } from "node:fs";
+import { mkdirSync, rmSync, writeFileSync } from "node:fs";
 import { join, resolve } from "node:path";
 import {
     personalInfo,
@@ -7,15 +7,15 @@ import {
     socialLinks,
     type Project,
     type Skill,
-    type SkillCategory,
 } from "../../portfolio/src/lib/data";
 
 const ROOT = resolve(import.meta.dir, "..");
 const ASSETS_DIR = join(ROOT, "assets");
-const PROJECTS_DIR = join(ASSETS_DIR, "projects");
 const DISPATCH_DIR = join(ASSETS_DIR, "dispatch");
 
-mkdirSync(PROJECTS_DIR, { recursive: true });
+// Clean up any legacy project card assets
+rmSync(join(ASSETS_DIR, "projects"), { recursive: true, force: true });
+rmSync(join(ASSETS_DIR, "section-projects.svg"), { force: true });
 mkdirSync(DISPATCH_DIR, { recursive: true });
 
 const PORTFOLIO_URL = "https://hoangm960.github.io/";
@@ -46,35 +46,6 @@ function getProjectDomain(project: Project): DomainFilter {
         return "ai";
     }
     return "web";
-}
-
-const domainLabels: Record<DomainFilter, string> = {
-    web: "Web & Full-Stack",
-    ai: "AI & DSP",
-    systems: "Embedded & Systems",
-};
-
-function formatShortPeriod(start: string, end?: string): string {
-    const fmt = (s: string) => {
-        if (!s || s === "present") return "Present";
-        const [y, m] = s.split("-");
-        const months = [
-            "Jan",
-            "Feb",
-            "Mar",
-            "Apr",
-            "May",
-            "Jun",
-            "Jul",
-            "Aug",
-            "Sep",
-            "Oct",
-            "Nov",
-            "Dec",
-        ];
-        return `${months[parseInt(m, 10) - 1] || m} ${y}`;
-    };
-    return `${fmt(start)} — ${fmt(end || "present")}`;
 }
 
 function esc(str: string): string {
@@ -150,7 +121,6 @@ const systemsProjects = projects.filter((p) => getProjectDomain(p) === "systems"
 const FONT_SANS = `'Geist', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif`;
 const FONT_MONO = `'Geist Mono', 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace`;
 
-// Brand colors for skills in skills.svg
 const SKILL_BRAND_COLORS: Record<string, string> = {
     Python: "#38bdf8",
     TypeScript: "#3b82f6",
@@ -373,10 +343,10 @@ function generateHeroSvg(): string {
   <!-- Section Jump Nav Strip (Translating SidebarPane nav) -->
   <g transform="translate(32, 372)">
     <rect x="0" y="0" width="436" height="52" rx="12" fill="#121126" fill-opacity="0.55" stroke="#1e1b4b" stroke-width="1" />
-    <text x="14" y="21" class="mono" font-size="10" font-weight="600" fill="#818cf8" letter-spacing="0.8">README INDEX // SECTIONS</text>
-    <text x="14" y="39" class="mono" font-size="10.5" fill="#a1a1aa">01 · PROJECTS (${totalProjects})</text>
-    <text x="158" y="39" class="mono" font-size="10.5" fill="#a1a1aa">02 · STACK (${skillCategories.length} LAYERS)</text>
-    <text x="318" y="39" class="mono" font-size="10.5" fill="#a1a1aa">03 · DISPATCH</text>
+    <text x="14" y="21" class="mono" font-size="10" font-weight="600" fill="#818cf8" letter-spacing="0.8">PROFILE // NAVIGATION</text>
+    <text x="14" y="39" class="mono" font-size="10.5" fill="#a1a1aa">01 · STACK (${skillCategories.length} LAYERS)</text>
+    <text x="176" y="39" class="mono" font-size="10.5" fill="#a1a1aa">02 · DISPATCH</text>
+    <text x="292" y="39" class="mono" font-size="10.5" fill="#a1a1aa">03 · PINNED REPOS ↓</text>
   </g>
 
   <!-- Bottom Location & Contact Pills -->
@@ -402,7 +372,7 @@ function generateHeroSvg(): string {
   </g>
 
   <!-- ================================================================= -->
-  <!-- RIGHT PANE: SYSTEM ARCHITECTURE · 03 DOMAINS INSPECTOR CARD       -->
+  <!-- RIGHT PANE: SYSTEM ARCHITECTURE · 03 DOMAINS OVERVIEW CARD        -->
   <!-- ================================================================= -->
   <g transform="translate(520, 26)">
     <!-- Outer Inspector Card -->
@@ -419,9 +389,9 @@ function generateHeroSvg(): string {
         <animate attributeName="r" values="4;10;4" dur="2s" repeatCount="indefinite" />
         <animate attributeName="opacity" values="0.7;0;0.7" dur="2s" repeatCount="indefinite" />
       </circle>
-      <text x="29" y="18" class="mono" font-size="10.5" font-weight="600" fill="#818cf8">INSPECTOR · HCMC UTC+7</text>
+      <text x="29" y="18" class="mono" font-size="10.5" font-weight="600" fill="#818cf8">ONLINE · HCMC UTC+7</text>
 
-      <!-- Right Counter + Esc Keycap -->
+      <!-- Right Counter + Live Badge -->
       <text x="434" y="18" text-anchor="end" class="mono" font-size="11" fill="#a1a1aa">#01–#${String(totalProjects).padStart(2, "0")} / 03 DOMAINS</text>
       <rect x="444" y="3" width="40" height="22" rx="6" fill="#090814" stroke="#1e1b4b" stroke-width="1" />
       <text x="464" y="17.5" text-anchor="middle" class="mono" font-size="10" fill="#a1a1aa">LIVE</text>
@@ -429,7 +399,7 @@ function generateHeroSvg(): string {
 
     <line x1="22" y1="58" x2="506" y2="58" stroke="#1e1b4b" stroke-width="1" />
 
-    <!-- Inspector Title & Badge -->
+    <!-- Overview Title & Badge -->
     <g transform="translate(22, 72)">
       <rect x="0" y="0" width="212" height="22" rx="11" fill="#818cf8" fill-opacity="0.12" stroke="#818cf8" stroke-opacity="0.3" stroke-width="1" />
       <text x="106" y="14.5" text-anchor="middle" class="mono" font-size="10" font-weight="600" fill="#818cf8">ARCHITECTURE OVERVIEW</text>
@@ -459,148 +429,15 @@ function generateHeroSvg(): string {
         })
         .join("\n    ")}
 
-    <!-- Bottom Inspector CTA Bar -->
+    <!-- Bottom CTA Bar -->
     <line x1="22" y1="404" x2="506" y2="404" stroke="#1e1b4b" stroke-width="1" />
     <g transform="translate(22, 415)">
       <rect x="0" y="0" width="276" height="30" rx="9" fill="#818cf8" />
       <text x="138" y="19.5" text-anchor="middle" class="sans" font-size="11.5" font-weight="700" fill="#090814">Interactive Portfolio · hoangm960.github.io ↗</text>
 
-      <text x="484" y="19.5" text-anchor="end" class="mono" font-size="10.5" fill="#a1a1aa">↓ Expand case studies</text>
+      <text x="484" y="19.5" text-anchor="end" class="mono" font-size="10.5" fill="#a1a1aa">↓ See Pinned Repos below</text>
     </g>
   </g>
-</svg>
-`;
-}
-
-function generateSectionProjectsHeaderSvg(): string {
-    const tabs = [
-        { label: `All (${totalProjects})`, active: true },
-        { label: `Web & Full-Stack (${webProjects.length})`, active: false },
-        { label: `AI & DSP (${aiProjects.length})`, active: false },
-        { label: `Embedded & Systems (${systemsProjects.length})`, active: false },
-    ];
-
-    let tabX = 1080;
-    const renderedTabs: string[] = [];
-    for (let i = tabs.length - 1; i >= 0; i--) {
-        const t = tabs[i];
-        const w = estimateTextWidth(t.label, 11.5, false) + 26;
-        tabX -= w;
-        const fill = t.active ? "#818cf8" : "#121126";
-        const stroke = t.active ? "#818cf8" : "#1e1b4b";
-        const textFill = t.active ? "#090814" : "#a1a1aa";
-        const weight = t.active ? "700" : "500";
-        renderedTabs.push(`<g transform="translate(${tabX}, 32)">
-    <rect x="0" y="0" width="${w}" height="30" rx="8" fill="${fill}" stroke="${stroke}" stroke-width="1" />
-    <text x="${w / 2}" y="19.5" text-anchor="middle" class="sans" font-size="11.5" font-weight="${weight}" fill="${textFill}">${esc(t.label)}</text>
-  </g>`);
-        tabX -= 8;
-    }
-
-    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 84" width="100%" role="img" aria-label="01 / Case Studies — Select a Project to Inspect">
-  <defs>
-    <style>
-      .sans { font-family: ${FONT_SANS}; }
-      .mono { font-family: ${FONT_MONO}; }
-    </style>
-  </defs>
-  <rect x="0" y="0" width="1080" height="84" rx="14" fill="#090814" />
-  <text x="4" y="20" class="mono" font-size="11" font-weight="600" fill="#818cf8" letter-spacing="1.6">01 / CASE STUDIES</text>
-  <text x="4" y="45" class="sans" font-size="20" font-weight="700" fill="#ffffff" letter-spacing="-0.3">Select a Project to Inspect</text>
-  <text x="4" y="65" class="sans" font-size="12" fill="#a1a1aa">Click a spotlight card to open its repository, or expand any row below for its full architecture writeup.</text>
-
-  ${renderedTabs.join("\n  ")}
-
-  <line x1="0" y1="82" x2="1080" y2="82" stroke="#1e1b4b" stroke-width="1.5" />
-</svg>
-`;
-}
-
-function generateProjectCardSvg(project: Project, globalIndex: number, isInspectedDefault: boolean): string {
-    const idxLabel = `#${String(globalIndex + 1).padStart(2, "0")}`;
-    const domainLabel = domainLabels[getProjectDomain(project)];
-    const periodLabel = formatShortPeriod(project.startDate, project.endDate);
-    const descLines = wrapText(project.description, 75, 3);
-
-    const borderStroke = isInspectedDefault ? "#818cf8" : "#1e1b4b";
-    const cardFill = isInspectedDefault ? "#14122e" : "#121126";
-
-    // Build tech stack pills along bottom-left (up to 4 pills + overflow count)
-    let pillX = 22;
-    const maxPillsWidth = 370;
-    const renderedPills: string[] = [];
-    let shownCount = 0;
-
-    for (const tech of project.techStack) {
-        const pillW = estimateTextWidth(tech, 10.5, false) + 18;
-        if (pillX + pillW > maxPillsWidth || shownCount >= 4) break;
-        renderedPills.push(`<g transform="translate(${pillX}, 177)">
-      <rect x="0" y="0" width="${pillW}" height="22" rx="6" fill="#090814" stroke="#1e1b4b" stroke-width="1" />
-      <text x="${pillW / 2}" y="14.5" text-anchor="middle" class="sans" font-size="10.5" font-weight="500" fill="#d4d4d8">${esc(tech)}</text>
-    </g>`);
-        pillX += pillW + 6;
-        shownCount++;
-    }
-
-    const remaining = project.techStack.length - shownCount;
-    if (remaining > 0) {
-        renderedPills.push(
-            `<text x="${pillX + 4}" y="192" class="mono" font-size="10.5" fill="#71717a">+${remaining}</text>`,
-        );
-    }
-
-    const domainPillW = estimateTextWidth(domainLabel, 10, true) + 18;
-
-    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 530 218" width="100%" role="img" aria-label="${esc(idxLabel)} ${esc(project.name)}">
-  <defs>
-    <style>
-      .sans { font-family: ${FONT_SANS}; }
-      .mono { font-family: ${FONT_MONO}; }
-    </style>
-  </defs>
-
-  <rect x="1" y="1" width="528" height="216" rx="18" fill="${cardFill}" stroke="${borderStroke}" stroke-width="${isInspectedDefault ? "1.6" : "1.2"}" />
-
-  <!-- Top Row: FolderGit2 Icon + Index + Domain Badge + Period / Inspecting Pill -->
-  <g transform="translate(22, 20)">
-    <!-- Folder Icon -->
-    <path d="M2 5a2 2 0 0 1 2-2h3.2a1 1 0 0 1 .8.4l1.2 1.6H14a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5z" fill="none" stroke="#818cf8" stroke-width="1.4" />
-    <text x="22" y="14" class="mono" font-size="12.5" font-weight="700" fill="#818cf8">${esc(idxLabel)}</text>
-
-    <g transform="translate(56, 0)">
-      <rect x="0" y="0" width="${domainPillW}" height="20" rx="10" fill="#818cf8" fill-opacity="0.12" stroke="#818cf8" stroke-opacity="0.3" stroke-width="1" />
-      <text x="${domainPillW / 2}" y="13.5" text-anchor="middle" class="mono" font-size="10" fill="#818cf8">${esc(domainLabel)}</text>
-    </g>
-
-    ${
-        isInspectedDefault
-            ? `<g transform="translate(394, 0)">
-      <rect x="0" y="0" width="92" height="20" rx="10" fill="#818cf8" />
-      <text x="46" y="13.5" text-anchor="middle" class="mono" font-size="10" font-weight="700" fill="#090814">← Inspecting</text>
-    </g>`
-            : `<text x="486" y="14" text-anchor="end" class="mono" font-size="11" fill="#71717a">${esc(periodLabel)}</text>`
-    }
-  </g>
-
-  <!-- Project Title -->
-  <text x="22" y="66" class="sans" font-size="17" font-weight="700" fill="#ffffff" letter-spacing="-0.3">${esc(project.name)}</text>
-
-  <!-- 3-Line Description -->
-  ${descLines
-      .map(
-          (line, i) =>
-              `<text x="22" y="${92 + i * 18}" class="sans" font-size="12" fill="#a1a1aa">${esc(line)}</text>`,
-      )
-      .join("\n  ")}
-
-  <!-- Bottom Divider -->
-  <line x1="22" y1="164" x2="508" y2="164" stroke="#1e1b4b" stroke-width="1" />
-
-  <!-- Tech Stack Pills -->
-  ${renderedPills.join("\n  ")}
-
-  <!-- Right Action Indicator -->
-  <text x="508" y="192" text-anchor="end" class="mono" font-size="11" font-weight="600" fill="#818cf8">${project.liveUrl ? "Repo · Live ↗" : "View Source ↗"}</text>
 </svg>
 `;
 }
@@ -608,7 +445,6 @@ function generateProjectCardSvg(project: Project, globalIndex: number, isInspect
 function renderSkillGlyph(skill: Skill, cx: number, cy: number): string {
     const color = SKILL_BRAND_COLORS[skill.name] || skill.bgColor || "#818cf8";
     if (skill.icon === null) {
-        // 4-point Sparkle icon matching <Sparkles size={12} className="text-indigo-400" /> in Skills.tsx
         return `<path d="M${cx} ${cy - 5} L${cx + 1.4} ${cy - 1.4} L${cx + 5} ${cy} L${cx + 1.4} ${cy + 1.4} L${cx} ${cy + 5} L${cx - 1.4} ${cy + 1.4} L${cx - 5} ${cy} L${cx - 1.4} ${cy - 1.4} Z" fill="#818cf8" />`;
     }
     return `<circle cx="${cx}" cy="${cy}" r="3.8" fill="${color}" />`;
@@ -664,7 +500,7 @@ function generateSkillsSvg(): string {
 
     const totalHeight = currentY + 4;
 
-    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 ${totalHeight}" width="100%" role="img" aria-label="02 / Capabilities — Technical Stack by Layer">
+    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 ${totalHeight}" width="100%" role="img" aria-label="01 / Capabilities — Technical Stack by Layer">
   <defs>
     <style>
       .sans { font-family: ${FONT_SANS}; }
@@ -675,7 +511,7 @@ function generateSkillsSvg(): string {
   <rect x="0" y="0" width="1080" height="${totalHeight}" rx="18" fill="#090814" />
 
   <!-- Section Header -->
-  <text x="4" y="22" class="mono" font-size="11" font-weight="600" fill="#818cf8" letter-spacing="1.6">02 / CAPABILITIES</text>
+  <text x="4" y="22" class="mono" font-size="11" font-weight="600" fill="#818cf8" letter-spacing="1.6">01 / CAPABILITIES</text>
   <text x="4" y="48" class="sans" font-size="20" font-weight="700" fill="#ffffff" letter-spacing="-0.3">Technical Stack by Layer</text>
 
   <g transform="translate(888, 22)">
@@ -692,7 +528,7 @@ function generateSkillsSvg(): string {
 }
 
 function generateDispatchHeaderSvg(): string {
-    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 128" width="100%" role="img" aria-label="03 / Dispatch — Start a Conversation">
+    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 128" width="100%" role="img" aria-label="02 / Dispatch — Start a Conversation">
   <defs>
     <style>
       .sans { font-family: ${FONT_SANS}; }
@@ -701,7 +537,7 @@ function generateDispatchHeaderSvg(): string {
   </defs>
 
   <rect x="0" y="0" width="1080" height="128" rx="16" fill="#090814" />
-  <text x="4" y="22" class="mono" font-size="11" font-weight="600" fill="#818cf8" letter-spacing="1.6">03 / DISPATCH</text>
+  <text x="4" y="22" class="mono" font-size="11" font-weight="600" fill="#818cf8" letter-spacing="1.6">02 / DISPATCH</text>
   <text x="4" y="48" class="sans" font-size="20" font-weight="700" fill="#ffffff" letter-spacing="-0.3">Start a Conversation</text>
   <line x1="0" y1="64" x2="1080" y2="64" stroke="#1e1b4b" stroke-width="1.5" />
 
@@ -737,39 +573,7 @@ function generateDispatchButtonSvg(opts: {
 `;
 }
 
-function renderInspectorAccordion(project: Project): string {
-    const globalIdx = projects.findIndex((p) => p._id === project._id);
-    const idxLabel = `#${String(globalIdx + 1).padStart(2, "0")}`;
-    const period = formatShortPeriod(project.startDate, project.endDate);
-    const domain = domainLabels[getProjectDomain(project)];
-    const topTech = project.techStack.slice(0, 4).join(" · ");
-    const isDefaultOpen = globalIdx === 0 ? " open" : "";
-    const liveBadge = project.liveUrl ? " · ⚡ <code>Live Demo</code>" : "";
-
-    const stackBadges = project.techStack.map((t) => `<code>${esc(t)}</code>`).join(" ");
-    const repoShort = project.githubUrl.replace("https://github.com/", "");
-    const links = [
-        `<a href="${project.githubUrl}"><strong>View Source (${esc(repoShort)}) ↗</strong></a>`,
-        project.liveUrl ? `<a href="${project.liveUrl}"><strong>Launch Live Demo ↗</strong></a>` : "",
-    ]
-        .filter(Boolean)
-        .join(" &nbsp;·&nbsp; ");
-
-    return `<details${isDefaultOpen}>
-  <summary><code>${idxLabel}</code> <strong>${esc(project.name)}</strong> &nbsp;—&nbsp; <sub><code>${esc(domain)}</code> · ${esc(period)} · ${esc(topTech)}${liveBadge}</sub></summary>
-  <br />
-  <blockquote>
-    <p><sub><strong>ARCHITECTURE &amp; ENGINEERING SUMMARY</strong></sub><br />
-    ${esc(project.description)}</p>
-    <p><sub><strong>TECHNOLOGY STACK (${project.techStack.length})</strong></sub><br />
-    ${stackBadges}</p>
-    <p>${links}</p>
-  </blockquote>
-</details>`;
-}
-
 function generateReadme(): string {
-    const spotlightProjects = projects.slice(0, 4);
     const linkedinUrl =
         socialLinks.find((s) => s.platform === "linkedin")?.url ||
         "https://www.linkedin.com/in/minh-hoang-tech/";
@@ -788,74 +592,21 @@ function generateReadme(): string {
 <br />
 
 <!-- ===================================================================== -->
-<!-- 01 / CASE STUDIES — 2x2 SPOTLIGHT GRID + INTERACTIVE INSPECTOR        -->
+<!-- 01 / CAPABILITIES — TECHNICAL STACK BY LAYER                          -->
 <!-- ===================================================================== -->
 
 <div align="center">
-  <img src="./assets/section-projects.svg" alt="01 / Case Studies — Select a Project to Inspect" width="100%" />
-</div>
-
-<table border="0" cellspacing="0" cellpadding="0" width="100%">
-  <tr>
-    <td width="50%" valign="top">
-      <a href="${spotlightProjects[0].githubUrl}">
-        <img src="./assets/projects/01-drawft.svg" alt="#01 ${spotlightProjects[0].name}" width="100%" />
-      </a>
-    </td>
-    <td width="50%" valign="top">
-      <a href="${spotlightProjects[1].githubUrl}">
-        <img src="./assets/projects/02-email-agent.svg" alt="#02 ${spotlightProjects[1].name}" width="100%" />
-      </a>
-    </td>
-  </tr>
-  <tr>
-    <td width="50%" valign="top">
-      <a href="${spotlightProjects[2].githubUrl}">
-        <img src="./assets/projects/03-snuggle.svg" alt="#03 ${spotlightProjects[2].name}" width="100%" />
-      </a>
-    </td>
-    <td width="50%" valign="top">
-      <a href="${spotlightProjects[3].githubUrl}">
-        <img src="./assets/projects/04-security.svg" alt="#04 ${spotlightProjects[3].name}" width="100%" />
-      </a>
-    </td>
-  </tr>
-</table>
-
-### 🔎 Interactive Project Inspector — All ${totalProjects} Engineering Case Studies
-
-<sub>Mirrors the split-pane <strong>Project Inspector</strong> on <a href="${PORTFOLIO_URL}">hoangm960.github.io</a>. Click any project below to inspect its full architecture and stack:</sub>
-
-#### ` + "`01 · Web & Full-Stack`" + ` <sub>(${webProjects.length} Systems)</sub>
-
-${webProjects.map(renderInspectorAccordion).join("\n\n")}
-
-#### ` + "`02 · AI & DSP`" + ` <sub>(${aiProjects.length} Systems)</sub>
-
-${aiProjects.map(renderInspectorAccordion).join("\n\n")}
-
-#### ` + "`03 · Embedded & Systems`" + ` <sub>(${systemsProjects.length} Systems)</sub>
-
-${systemsProjects.map(renderInspectorAccordion).join("\n\n")}
-
-<br />
-
-<!-- ===================================================================== -->
-<!-- 02 / CAPABILITIES — TECHNICAL STACK BY LAYER                          -->
-<!-- ===================================================================== -->
-
-<div align="center">
-  <img src="./assets/skills.svg" alt="02 / Capabilities — Technical Stack by Layer" width="100%" />
+  <img src="./assets/skills.svg" alt="01 / Capabilities — Technical Stack by Layer" width="100%" />
 </div>
 
 <br />
 
 <!-- ===================================================================== -->
-<!-- 03 / DISPATCH — CONTACT & LINKS                                       -->
+<!-- 02 / DISPATCH — CONTACT & LINKS                                       -->
 <!-- ===================================================================== -->
 
 <div align="center">
-  <img src="./assets/dispatch/header.svg" alt="03 / Dispatch — Start a Conversation" width="100%" />
+  <img src="./assets/dispatch/header.svg" alt="02 / Dispatch — Start a Conversation" width="100%" />
 </div>
 
 <p align="center">
@@ -886,16 +637,6 @@ ${systemsProjects.map(renderInspectorAccordion).join("\n\n")}
 
 // Write all SVG assets
 writeFileSync(join(ASSETS_DIR, "hero.svg"), generateHeroSvg());
-writeFileSync(join(ASSETS_DIR, "section-projects.svg"), generateSectionProjectsHeaderSvg());
-
-const spotlightSlugs = ["01-drawft.svg", "02-email-agent.svg", "03-snuggle.svg", "04-security.svg"];
-projects.slice(0, 4).forEach((proj, idx) => {
-    writeFileSync(
-        join(PROJECTS_DIR, spotlightSlugs[idx]),
-        generateProjectCardSvg(proj, idx, idx === 0),
-    );
-});
-
 writeFileSync(join(ASSETS_DIR, "skills.svg"), generateSkillsSvg());
 writeFileSync(join(DISPATCH_DIR, "header.svg"), generateDispatchHeaderSvg());
 writeFileSync(
