@@ -1,0 +1,8 @@
+{
+  "name": "hoangm960-github-profile",
+  "private": true,
+  "description": "Self-hosted SVG & Markdown GitHub profile synced with ../portfolio",
+  "scripts": {
+    "generate": "bun run scripts/generate.ts"
+  }
+}

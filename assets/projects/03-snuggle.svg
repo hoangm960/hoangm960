@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 530 218" width="100%" role="img" aria-label="#03 Snuggle">
+  <defs>
+    <style>
+      .sans { font-family: 'Geist', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
+      .mono { font-family: 'Geist Mono', 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; }
+    </style>
+  </defs>
+
+  <rect x="1" y="1" width="528" height="216" rx="18" fill="#121126" stroke="#1e1b4b" stroke-width="1.2" />
+
+  <!-- Top Row: FolderGit2 Icon + Index + Domain Badge + Period / Inspecting Pill -->
+  <g transform="translate(22, 20)">
+    <!-- Folder Icon -->
+    <path d="M2 5a2 2 0 0 1 2-2h3.2a1 1 0 0 1 .8.4l1.2 1.6H14a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5z" fill="none" stroke="#818cf8" stroke-width="1.4" />
+    <text x="22" y="14" class="mono" font-size="12.5" font-weight="700" fill="#818cf8">#03</text>
+
+    <g transform="translate(56, 0)">
+      <rect x="0" y="0" width="114" height="20" rx="10" fill="#818cf8" fill-opacity="0.12" stroke="#818cf8" stroke-opacity="0.3" stroke-width="1" />
+      <text x="57" y="13.5" text-anchor="middle" class="mono" font-size="10" fill="#818cf8">Web &amp; Full-Stack</text>
+    </g>
+
+    <text x="486" y="14" text-anchor="end" class="mono" font-size="11" fill="#71717a">Mar 2026 — May 2026</text>
+  </g>
+
+  <!-- Project Title -->
+  <text x="22" y="66" class="sans" font-size="17" font-weight="700" fill="#ffffff" letter-spacing="-0.3">Snuggle</text>
+
+  <!-- 3-Line Description -->
+  <text x="22" y="92" class="sans" font-size="12" fill="#a1a1aa">Built a full-stack pet adoption platform with a Next.js 14 App Router</text>
+  <text x="22" y="110" class="sans" font-size="12" fill="#a1a1aa">frontend and an Express.js TypeScript backend managing 14 Cloud Firestore</text>
+  <text x="22" y="128" class="sans" font-size="12" fill="#a1a1aa">collections, featuring a multi-step eKYC verification pipeline with…</text>
+
+  <!-- Bottom Divider -->
+  <line x1="22" y1="164" x2="508" y2="164" stroke="#1e1b4b" stroke-width="1" />
+
+  <!-- Tech Stack Pills -->
+  <g transform="translate(22, 177)">
+      <rect x="0" y="0" width="62" height="22" rx="6" fill="#090814" stroke="#1e1b4b" stroke-width="1" />
+      <text x="31" y="14.5" text-anchor="middle" class="sans" font-size="10.5" font-weight="500" fill="#d4d4d8">Next.js 14</text>
+    </g>
+  <g transform="translate(90, 177)">
+      <rect x="0" y="0" width="70" height="22" rx="6" fill="#090814" stroke="#1e1b4b" stroke-width="1" />
+      <text x="35" y="14.5" text-anchor="middle" class="sans" font-size="10.5" font-weight="500" fill="#d4d4d8">TypeScript</text>
+    </g>
+  <g transform="translate(166, 177)">
+      <rect x="0" y="0" width="69" height="22" rx="6" fill="#090814" stroke="#1e1b4b" stroke-width="1" />
+      <text x="34.5" y="14.5" text-anchor="middle" class="sans" font-size="10.5" font-weight="500" fill="#d4d4d8">Express.js</text>
+    </g>
+  <g transform="translate(241, 177)">
+      <rect x="0" y="0" width="60" height="22" rx="6" fill="#090814" stroke="#1e1b4b" stroke-width="1" />
+      <text x="30" y="14.5" text-anchor="middle" class="sans" font-size="10.5" font-weight="500" fill="#d4d4d8">Firebase</text>
+    </g>
+  <text x="311" y="192" class="mono" font-size="10.5" fill="#71717a">+6</text>
+
+  <!-- Right Action Indicator -->
+  <text x="508" y="192" text-anchor="end" class="mono" font-size="11" font-weight="600" fill="#818cf8">View Source ↗</text>
+</svg>

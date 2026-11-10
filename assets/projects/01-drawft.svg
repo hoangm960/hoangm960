@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 530 218" width="100%" role="img" aria-label="#01 Drawft">
+  <defs>
+    <style>
+      .sans { font-family: 'Geist', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
+      .mono { font-family: 'Geist Mono', 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; }
+    </style>
+  </defs>
+
+  <rect x="1" y="1" width="528" height="216" rx="18" fill="#14122e" stroke="#818cf8" stroke-width="1.6" />
+
+  <!-- Top Row: FolderGit2 Icon + Index + Domain Badge + Period / Inspecting Pill -->
+  <g transform="translate(22, 20)">
+    <!-- Folder Icon -->
+    <path d="M2 5a2 2 0 0 1 2-2h3.2a1 1 0 0 1 .8.4l1.2 1.6H14a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5z" fill="none" stroke="#818cf8" stroke-width="1.4" />
+    <text x="22" y="14" class="mono" font-size="12.5" font-weight="700" fill="#818cf8">#01</text>
+
+    <g transform="translate(56, 0)">
+      <rect x="0" y="0" width="114" height="20" rx="10" fill="#818cf8" fill-opacity="0.12" stroke="#818cf8" stroke-opacity="0.3" stroke-width="1" />
+      <text x="57" y="13.5" text-anchor="middle" class="mono" font-size="10" fill="#818cf8">Web &amp; Full-Stack</text>
+    </g>
+
+    <g transform="translate(394, 0)">
+      <rect x="0" y="0" width="92" height="20" rx="10" fill="#818cf8" />
+      <text x="46" y="13.5" text-anchor="middle" class="mono" font-size="10" font-weight="700" fill="#090814">← Inspecting</text>
+    </g>
+  </g>
+
+  <!-- Project Title -->
+  <text x="22" y="66" class="sans" font-size="17" font-weight="700" fill="#ffffff" letter-spacing="-0.3">Drawft</text>
+
+  <!-- 3-Line Description -->
+  <text x="22" y="92" class="sans" font-size="12" fill="#a1a1aa">Built an infinite 2D HTML5 Canvas drawing application supporting 5 Path2D</text>
+  <text x="22" y="110" class="sans" font-size="12" fill="#a1a1aa">shape tools, pan/zoom affine matrix transforms, group anchor scaling,</text>
+  <text x="22" y="128" class="sans" font-size="12" fill="#a1a1aa">center-pivot rotation, and keyboard shortcuts. Indexed shape bounding…</text>
+
+  <!-- Bottom Divider -->
+  <line x1="22" y1="164" x2="508" y2="164" stroke="#1e1b4b" stroke-width="1" />
+
+  <!-- Tech Stack Pills -->
+  <g transform="translate(22, 177)">
+      <rect x="0" y="0" width="56" height="22" rx="6" fill="#090814" stroke="#1e1b4b" stroke-width="1" />
+      <text x="28" y="14.5" text-anchor="middle" class="sans" font-size="10.5" font-weight="500" fill="#d4d4d8">React 19</text>
+    </g>
+  <g transform="translate(84, 177)">
+      <rect x="0" y="0" width="70" height="22" rx="6" fill="#090814" stroke="#1e1b4b" stroke-width="1" />
+      <text x="35" y="14.5" text-anchor="middle" class="sans" font-size="10.5" font-weight="500" fill="#d4d4d8">TypeScript</text>
+    </g>
+  <g transform="translate(160, 177)">
+      <rect x="0" y="0" width="37" height="22" rx="6" fill="#090814" stroke="#1e1b4b" stroke-width="1" />
+      <text x="18.5" y="14.5" text-anchor="middle" class="sans" font-size="10.5" font-weight="500" fill="#d4d4d8">Vite</text>
+    </g>
+  <g transform="translate(203, 177)">
+      <rect x="0" y="0" width="55" height="22" rx="6" fill="#090814" stroke="#1e1b4b" stroke-width="1" />
+      <text x="27.5" y="14.5" text-anchor="middle" class="sans" font-size="10.5" font-weight="500" fill="#d4d4d8">Zustand</text>
+    </g>
+  <text x="268" y="192" class="mono" font-size="10.5" fill="#71717a">+4</text>
+
+  <!-- Right Action Indicator -->
+  <text x="508" y="192" text-anchor="end" class="mono" font-size="11" font-weight="600" fill="#818cf8">Repo · Live ↗</text>
+</svg>
