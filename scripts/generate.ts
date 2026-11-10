@@ -185,73 +185,34 @@ const SKILL_BRAND_COLORS: Record<string, string> = {
     Bun: "#f472b6",
 };
 
-function shortProjectName(name: string): string {
-    return name
-        .replace("Fire Detection & Extinguishment System", "Fire RTOS")
-        .replace("Smart Security System", "Smart Security IoT");
-}
-
 function generateHeroSvg(): string {
-    const taglineLines = wrapText(personalInfo.tagline, 62, 2);
-    const bioLines = wrapText(personalInfo.bio, 73, 6);
+    const bioLines = wrapText(personalInfo.bio, 138, 3);
+    const bioBarHeight = bioLines.length * 19 + 4;
 
-    const domains = [
-        {
-            code: "01",
-            label: "WEB & FULL-STACK",
-            count: webProjects.length,
-            ratio: Math.round((webProjects.length / totalProjects) * 100),
-            barWidth: Math.round((webProjects.length / totalProjects) * 172),
-            projectsLine: webProjects.map((p) => shortProjectName(p.name)).join(" · "),
-            stackLine: "React 19 · Next.js 14 · HTML5 Canvas + R-tree · Express · Socket.io",
-            accent: "#818cf8",
-        },
-        {
-            code: "02",
-            label: "AI & DSP",
-            count: aiProjects.length,
-            ratio: Math.round((aiProjects.length / totalProjects) * 100),
-            barWidth: Math.round((aiProjects.length / totalProjects) * 172),
-            projectsLine: aiProjects.map((p) => shortProjectName(p.name)).join(" · "),
-            stackLine: "LangGraph · 18 Gemini ReAct Tools · FAISS RAG · MediaPipe · SciPy",
-            accent: "#a5b4fc",
-        },
-        {
-            code: "03",
-            label: "EMBEDDED & SYSTEMS",
-            count: systemsProjects.length,
-            ratio: Math.round((systemsProjects.length / totalProjects) * 100),
-            barWidth: Math.round((systemsProjects.length / totalProjects) * 172),
-            projectsLine: systemsProjects.map((p) => shortProjectName(p.name)).join(" · "),
-            stackLine: "ESP32 FreeRTOS · TFLite Micro · RPi MQTT · ANTLR4 · POSIX C",
-            accent: "#c7d2fe",
-        },
-    ];
-
-    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 510" width="100%" role="img" aria-label="${esc(personalInfo.name)} — ${esc(personalInfo.role)}">
+    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 360" width="100%" role="img" aria-label="${esc(personalInfo.name)} — ${esc(personalInfo.role)}">
   <defs>
     <style>
       .sans { font-family: ${FONT_SANS}; }
       .mono { font-family: ${FONT_MONO}; }
     </style>
 
-    <radialGradient id="bg-glow-left" cx="15%" cy="15%" r="55%">
-      <stop offset="0%" stop-color="#6366f1" stop-opacity="0.12" />
+    <radialGradient id="bg-glow-left" cx="15%" cy="15%" r="60%">
+      <stop offset="0%" stop-color="#6366f1" stop-opacity="0.14" />
       <stop offset="100%" stop-color="#090814" stop-opacity="0" />
     </radialGradient>
 
-    <radialGradient id="bg-glow-right" cx="85%" cy="80%" r="55%">
+    <radialGradient id="bg-glow-right" cx="85%" cy="85%" r="60%">
       <stop offset="0%" stop-color="#818cf8" stop-opacity="0.10" />
       <stop offset="100%" stop-color="#090814" stop-opacity="0" />
     </radialGradient>
 
-    <linearGradient id="inspector-border" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#818cf8" stop-opacity="0.65">
-        <animate attributeName="stop-color" values="#818cf8;#4f46e5;#c7d2fe;#818cf8" dur="12s" repeatCount="indefinite" />
+    <linearGradient id="hero-border" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#818cf8" stop-opacity="0.55">
+        <animate attributeName="stop-color" values="#818cf8;#312e81;#c7d2fe;#818cf8" dur="12s" repeatCount="indefinite" />
       </stop>
-      <stop offset="50%" stop-color="#312e81" stop-opacity="0.45" />
-      <stop offset="100%" stop-color="#6366f1" stop-opacity="0.7">
-        <animate attributeName="stop-color" values="#6366f1;#c7d2fe;#4338ca;#6366f1" dur="12s" repeatCount="indefinite" />
+      <stop offset="50%" stop-color="#1e1b4b" stop-opacity="0.9" />
+      <stop offset="100%" stop-color="#6366f1" stop-opacity="0.55">
+        <animate attributeName="stop-color" values="#6366f1;#c7d2fe;#1e1b4b;#6366f1" dur="12s" repeatCount="indefinite" />
       </stop>
     </linearGradient>
 
@@ -266,176 +227,123 @@ function generateHeroSvg(): string {
   </defs>
 
   <!-- Base Canvas Plate -->
-  <rect x="1" y="1" width="1078" height="508" rx="24" fill="#090814" stroke="#1e1b4b" stroke-width="2" />
-  <rect x="1" y="1" width="1078" height="508" rx="24" fill="url(#bg-glow-left)" />
-  <rect x="1" y="1" width="1078" height="508" rx="24" fill="url(#bg-glow-right)" />
-  <rect x="1" y="1" width="1078" height="508" rx="24" fill="url(#dot-grid)" />
+  <rect x="1" y="1" width="1078" height="358" rx="24" fill="#090814" stroke="url(#hero-border)" stroke-width="1.8" />
+  <rect x="1" y="1" width="1078" height="358" rx="24" fill="url(#bg-glow-left)" />
+  <rect x="1" y="1" width="1078" height="358" rx="24" fill="url(#bg-glow-right)" />
+  <rect x="1" y="1" width="1078" height="358" rx="24" fill="url(#dot-grid)" />
 
   <!-- Top 1px Specular Highlight -->
-  <line x1="40" y1="2" x2="1040" y2="2" stroke="#818cf8" stroke-opacity="0.22" stroke-width="1" />
-
-  <!-- Split-Pane Divider (Matching SidebarPane border-indigo-950/80) -->
-  <line x1="494" y1="28" x2="494" y2="482" stroke="#1e1b4b" stroke-width="1.5" />
+  <line x1="40" y1="2" x2="1040" y2="2" stroke="#818cf8" stroke-opacity="0.25" stroke-width="1" />
 
   <!-- ================================================================= -->
-  <!-- LEFT PANE: PROFILE & STATS (Translating SidebarPane.tsx)          -->
+  <!-- ROW 1: IDENTITY + LIVE STATUS BADGES                              -->
   <!-- ================================================================= -->
 
   <!-- 64x64 Rounded-2xl Vector Monogram Badge -->
-  <g transform="translate(32, 34)">
+  <g transform="translate(36, 30)">
     <rect x="0" y="0" width="64" height="64" rx="16" fill="url(#monogram-bg)" stroke="#818cf8" stroke-opacity="0.45" stroke-width="2" />
     <rect x="5" y="5" width="54" height="54" rx="12" fill="none" stroke="#1e1b4b" stroke-width="1" />
     <text x="32" y="36" text-anchor="middle" class="sans" font-size="21" font-weight="800" fill="#ffffff" letter-spacing="-0.5">HM</text>
     <text x="32" y="51" text-anchor="middle" class="mono" font-size="9.5" font-weight="600" fill="#818cf8">&lt;/&gt;</text>
   </g>
 
-  <!-- Name, Role & Handle Pill -->
-  <text x="112" y="62" class="sans" font-size="26" font-weight="700" fill="#ffffff" letter-spacing="-0.6">${esc(personalInfo.name)}</text>
-  <text x="112" y="85" class="sans" font-size="14" font-weight="600" fill="#818cf8">${esc(personalInfo.role)}</text>
+  <!-- Name & Role -->
+  <text x="116" y="58" class="sans" font-size="28" font-weight="700" fill="#ffffff" letter-spacing="-0.6">${esc(personalInfo.name)}</text>
+  <text x="116" y="82" class="sans" font-size="14.5" font-weight="600" fill="#818cf8">${esc(personalInfo.role)}</text>
 
-  <g transform="translate(362, 42)">
-    <rect x="0" y="0" width="106" height="24" rx="8" fill="#121126" stroke="#1e1b4b" stroke-width="1" />
-    <text x="53" y="16" text-anchor="middle" class="mono" font-size="11" fill="#a1a1aa">@hoangm960</text>
+  <!-- Right Status & Handle Pills -->
+  <g transform="translate(728, 36)">
+    <rect x="0" y="0" width="194" height="28" rx="9" fill="#121126" stroke="#1e1b4b" stroke-width="1.2" />
+    <circle cx="16" cy="14" r="3.5" fill="#818cf8">
+      <animate attributeName="r" values="3.5;5;3.5" dur="2s" repeatCount="indefinite" />
+    </circle>
+    <circle cx="16" cy="14" r="7" fill="none" stroke="#818cf8" stroke-width="1">
+      <animate attributeName="r" values="4;10;4" dur="2s" repeatCount="indefinite" />
+      <animate attributeName="opacity" values="0.7;0;0.7" dur="2s" repeatCount="indefinite" />
+    </circle>
+    <text x="29" y="18" class="mono" font-size="10.5" font-weight="600" fill="#818cf8">ONLINE · HCMC UTC+7</text>
   </g>
 
-  <!-- Tagline -->
-  ${taglineLines
-      .map(
-          (line, idx) =>
-              `<text x="32" y="${124 + idx * 19}" class="sans" font-size="13" fill="#d4d4d8">${esc(line)}</text>`,
-      )
-      .join("\n  ")}
+  <g transform="translate(932, 36)">
+    <rect x="0" y="0" width="112" height="28" rx="9" fill="#121126" stroke="#1e1b4b" stroke-width="1.2" />
+    <text x="56" y="18" text-anchor="middle" class="mono" font-size="11" fill="#a1a1aa">@hoangm960</text>
+  </g>
 
-  <!-- Bio with Indigo Left Border -->
-  <rect x="32" y="158" width="2.5" height="${bioLines.length * 17.5 + 4}" rx="1.25" fill="#1e1b4b" />
-  <rect x="32" y="158" width="2.5" height="36" rx="1.25" fill="#818cf8" />
+  <!-- ================================================================= -->
+  <!-- ROW 2: TAGLINE & FULL-WIDTH BIO                                   -->
+  <!-- ================================================================= -->
+  <text x="36" y="122" class="sans" font-size="14" font-weight="500" fill="#e4e4e7">${esc(personalInfo.tagline)}</text>
+
+  <rect x="36" y="138" width="2.5" height="${bioBarHeight}" rx="1.25" fill="#1e1b4b" />
+  <rect x="36" y="138" width="2.5" height="26" rx="1.25" fill="#818cf8" />
   ${bioLines
       .map(
           (line, idx) =>
-              `<text x="46" y="${171 + idx * 17.5}" class="sans" font-size="11.5" fill="#a1a1aa">${esc(line)}</text>`,
+              `<text x="52" y="${152 + idx * 19}" class="sans" font-size="12.5" fill="#a1a1aa">${esc(line)}</text>`,
       )
       .join("\n  ")}
 
-  <!-- Auto-Computed 3-Stat Strip -->
-  <g transform="translate(32, 286)">
+  <!-- ================================================================= -->
+  <!-- ROW 3: 3-COLUMN AUTO-COMPUTED STAT STRIP                          -->
+  <!-- ================================================================= -->
+  <g transform="translate(36, 214)">
     <!-- Card 1: Years Coding -->
     <g transform="translate(0, 0)">
-      <rect x="0" y="0" width="138" height="66" rx="12" fill="#121126" fill-opacity="0.85" stroke="#1e1b4b" stroke-width="1.2" />
-      <text x="14" y="30" class="mono" font-size="20" font-weight="700" fill="#ffffff">${yearsCoding}+</text>
-      <text x="14" y="49" class="sans" font-size="11" fill="#a1a1aa">Years Coding</text>
+      <rect x="0" y="0" width="324" height="68" rx="14" fill="#121126" fill-opacity="0.85" stroke="#1e1b4b" stroke-width="1.2" />
+      <text x="20" y="31" class="mono" font-size="22" font-weight="700" fill="#ffffff">${yearsCoding}+</text>
+      <text x="20" y="51" class="sans" font-size="12" fill="#a1a1aa">Years Coding</text>
+      <text x="304" y="40" text-anchor="end" class="mono" font-size="10.5" fill="#71717a">${earliestYear} — PRESENT</text>
     </g>
 
     <!-- Card 2: Key Projects -->
-    <g transform="translate(149, 0)">
-      <rect x="0" y="0" width="138" height="66" rx="12" fill="#121126" fill-opacity="0.85" stroke="#1e1b4b" stroke-width="1.2" />
-      <text x="14" y="30" class="mono" font-size="20" font-weight="700" fill="#818cf8">${totalProjects}</text>
-      <text x="14" y="49" class="sans" font-size="11" fill="#a1a1aa">Key Projects</text>
+    <g transform="translate(342, 0)">
+      <rect x="0" y="0" width="324" height="68" rx="14" fill="#121126" fill-opacity="0.85" stroke="#1e1b4b" stroke-width="1.2" />
+      <text x="20" y="31" class="mono" font-size="22" font-weight="700" fill="#818cf8">${totalProjects}</text>
+      <text x="20" y="51" class="sans" font-size="12" fill="#a1a1aa">Key Projects</text>
+      <text x="304" y="40" text-anchor="end" class="mono" font-size="10.5" fill="#818cf8">WEB · AI · EMBEDDED</text>
     </g>
 
     <!-- Card 3: Technologies -->
-    <g transform="translate(298, 0)">
-      <rect x="0" y="0" width="138" height="66" rx="12" fill="#121126" fill-opacity="0.85" stroke="#1e1b4b" stroke-width="1.2" />
-      <text x="14" y="30" class="mono" font-size="20" font-weight="700" fill="#ffffff">${totalTechnologies}</text>
-      <text x="14" y="49" class="sans" font-size="11" fill="#a1a1aa">Technologies</text>
+    <g transform="translate(684, 0)">
+      <rect x="0" y="0" width="324" height="68" rx="14" fill="#121126" fill-opacity="0.85" stroke="#1e1b4b" stroke-width="1.2" />
+      <text x="20" y="31" class="mono" font-size="22" font-weight="700" fill="#ffffff">${totalTechnologies}</text>
+      <text x="20" y="51" class="sans" font-size="12" fill="#a1a1aa">Technologies</text>
+      <text x="304" y="40" text-anchor="end" class="mono" font-size="10.5" fill="#71717a">${skillCategories.length} STACK LAYERS</text>
     </g>
   </g>
 
-  <!-- Section Jump Nav Strip (Translating SidebarPane nav) -->
-  <g transform="translate(32, 372)">
-    <rect x="0" y="0" width="436" height="52" rx="12" fill="#121126" fill-opacity="0.55" stroke="#1e1b4b" stroke-width="1" />
-    <text x="14" y="21" class="mono" font-size="10" font-weight="600" fill="#818cf8" letter-spacing="0.8">PROFILE // NAVIGATION</text>
-    <text x="14" y="39" class="mono" font-size="10.5" fill="#a1a1aa">01 · STACK (${skillCategories.length} LAYERS)</text>
-    <text x="176" y="39" class="mono" font-size="10.5" fill="#a1a1aa">02 · DISPATCH</text>
-    <text x="292" y="39" class="mono" font-size="10.5" fill="#a1a1aa">03 · PINNED REPOS ↓</text>
-  </g>
+  <!-- ================================================================= -->
+  <!-- ROW 4: BOTTOM LOCATION, CONTACT & PORTFOLIO BAR                   -->
+  <!-- ================================================================= -->
+  <line x1="36" y1="298" x2="1044" y2="298" stroke="#1e1b4b" stroke-width="1" />
 
-  <!-- Bottom Location & Contact Pills -->
-  <g transform="translate(32, 442)">
+  <g transform="translate(36, 310)">
     <!-- Location Pill -->
-    <rect x="0" y="0" width="144" height="32" rx="8" fill="#121126" stroke="#1e1b4b" stroke-width="1" />
-    <path d="M16 10.5c-2.2 0-4 1.8-4 4 0 3 4 7 4 7s4-4 4-7c0-2.2-1.8-4-4-4zm0 5.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z" fill="#818cf8" />
-    <text x="28" y="20" class="sans" font-size="11.5" fill="#a1a1aa">${esc(personalInfo.location)}</text>
+    <rect x="0" y="0" width="144" height="30" rx="8" fill="#121126" stroke="#1e1b4b" stroke-width="1" />
+    <path d="M16 9.5c-2.2 0-4 1.8-4 4 0 3 4 7 4 7s4-4 4-7c0-2.2-1.8-4-4-4zm0 5.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z" fill="#818cf8" />
+    <text x="28" y="19" class="sans" font-size="11.5" fill="#a1a1aa">${esc(personalInfo.location)}</text>
 
     <!-- Email Pill -->
     <g transform="translate(154, 0)">
-      <rect x="0" y="0" width="194" height="32" rx="8" fill="#121126" stroke="#1e1b4b" stroke-width="1" />
-      <rect x="11" y="11" width="11" height="8" rx="1.5" fill="none" stroke="#818cf8" stroke-width="1.3" />
-      <path d="M11 12l5.5 4 5.5-4" fill="none" stroke="#818cf8" stroke-width="1.3" />
-      <text x="28" y="20" class="sans" font-size="11.5" fill="#d4d4d8">${esc(personalInfo.email)}</text>
+      <rect x="0" y="0" width="194" height="30" rx="8" fill="#121126" stroke="#1e1b4b" stroke-width="1" />
+      <rect x="11" y="10" width="11" height="8" rx="1.5" fill="none" stroke="#818cf8" stroke-width="1.3" />
+      <path d="M11 11l5.5 4 5.5-4" fill="none" stroke="#818cf8" stroke-width="1.3" />
+      <text x="28" y="19" class="sans" font-size="11.5" fill="#d4d4d8">${esc(personalInfo.email)}</text>
     </g>
 
     <!-- University Pill -->
     <g transform="translate(358, 0)">
-      <rect x="0" y="0" width="78" height="32" rx="8" fill="#121126" stroke="#1e1b4b" stroke-width="1" />
-      <text x="39" y="20" text-anchor="middle" class="mono" font-size="11" font-weight="600" fill="#818cf8">FUV CS</text>
-    </g>
-  </g>
-
-  <!-- ================================================================= -->
-  <!-- RIGHT PANE: SYSTEM ARCHITECTURE · 03 DOMAINS OVERVIEW CARD        -->
-  <!-- ================================================================= -->
-  <g transform="translate(520, 26)">
-    <!-- Outer Inspector Card -->
-    <rect x="0" y="0" width="528" height="458" rx="22" fill="#121126" fill-opacity="0.95" stroke="url(#inspector-border)" stroke-width="1.5" />
-
-    <!-- Top Inspector Control Bar -->
-    <g transform="translate(22, 18)">
-      <rect x="0" y="0" width="192" height="28" rx="9" fill="#1b1936" />
-      <!-- Pulsing Radar Dot -->
-      <circle cx="16" cy="14" r="3.5" fill="#818cf8">
-        <animate attributeName="r" values="3.5;5;3.5" dur="2s" repeatCount="indefinite" />
-      </circle>
-      <circle cx="16" cy="14" r="7" fill="none" stroke="#818cf8" stroke-width="1">
-        <animate attributeName="r" values="4;10;4" dur="2s" repeatCount="indefinite" />
-        <animate attributeName="opacity" values="0.7;0;0.7" dur="2s" repeatCount="indefinite" />
-      </circle>
-      <text x="29" y="18" class="mono" font-size="10.5" font-weight="600" fill="#818cf8">ONLINE · HCMC UTC+7</text>
-
-      <!-- Right Counter + Live Badge -->
-      <text x="434" y="18" text-anchor="end" class="mono" font-size="11" fill="#a1a1aa">#01–#${String(totalProjects).padStart(2, "0")} / 03 DOMAINS</text>
-      <rect x="444" y="3" width="40" height="22" rx="6" fill="#090814" stroke="#1e1b4b" stroke-width="1" />
-      <text x="464" y="17.5" text-anchor="middle" class="mono" font-size="10" fill="#a1a1aa">LIVE</text>
+      <rect x="0" y="0" width="78" height="30" rx="8" fill="#121126" stroke="#1e1b4b" stroke-width="1" />
+      <text x="39" y="19" text-anchor="middle" class="mono" font-size="11" font-weight="600" fill="#818cf8">FUV CS</text>
     </g>
 
-    <line x1="22" y1="58" x2="506" y2="58" stroke="#1e1b4b" stroke-width="1" />
+    <!-- Section Index Hint -->
+    <text x="716" y="19" text-anchor="end" class="mono" font-size="10.5" fill="#71717a">01 · STACK   ·   02 · DISPATCH   ·   PINNED ↓</text>
 
-    <!-- Overview Title & Badge -->
-    <g transform="translate(22, 72)">
-      <rect x="0" y="0" width="212" height="22" rx="11" fill="#818cf8" fill-opacity="0.12" stroke="#818cf8" stroke-opacity="0.3" stroke-width="1" />
-      <text x="106" y="14.5" text-anchor="middle" class="mono" font-size="10" font-weight="600" fill="#818cf8">ARCHITECTURE OVERVIEW</text>
-      <text x="222" y="15" class="mono" font-size="11" fill="#a1a1aa">2020 — Present</text>
-
-      <text x="0" y="45" class="sans" font-size="20" font-weight="700" fill="#ffffff" letter-spacing="-0.4">Engineering Across 3 Core Domains</text>
-    </g>
-
-    <!-- 3 Domain Telemetry Cards -->
-    ${domains
-        .map((d, idx) => {
-            const yOffset = 132 + idx * 88;
-            return `<g transform="translate(22, ${yOffset})">
-      <rect x="0" y="0" width="484" height="78" rx="14" fill="#090814" stroke="#1e1b4b" stroke-width="1.2" />
-      <text x="16" y="23" class="mono" font-size="11" font-weight="700" fill="${d.accent}">${d.code} · ${esc(d.label)}</text>
-      <text x="284" y="23" text-anchor="end" class="mono" font-size="10.5" fill="#a1a1aa">${d.count} systems (${d.ratio}%)</text>
-
-      <!-- Telemetry Progress Bar Track + Animated Fill -->
-      <rect x="296" y="14" width="172" height="7" rx="3.5" fill="#121126" stroke="#1e1b4b" stroke-width="0.8" />
-      <rect x="296" y="14" width="${d.barWidth}" height="7" rx="3.5" fill="${d.accent}">
-        <animate attributeName="width" from="0" to="${d.barWidth}" dur="1s" fill="freeze" />
-      </rect>
-
-      <text x="16" y="45" class="sans" font-size="12" font-weight="600" fill="#e4e4e7">${esc(d.projectsLine)}</text>
-      <text x="16" y="64" class="mono" font-size="10.5" fill="#a1a1aa">${esc(d.stackLine)}</text>
-    </g>`;
-        })
-        .join("\n    ")}
-
-    <!-- Bottom CTA Bar -->
-    <line x1="22" y1="404" x2="506" y2="404" stroke="#1e1b4b" stroke-width="1" />
-    <g transform="translate(22, 415)">
+    <!-- Primary Portfolio CTA Pill -->
+    <g transform="translate(732, 0)">
       <rect x="0" y="0" width="276" height="30" rx="9" fill="#818cf8" />
       <text x="138" y="19.5" text-anchor="middle" class="sans" font-size="11.5" font-weight="700" fill="#090814">Interactive Portfolio · hoangm960.github.io ↗</text>
-
-      <text x="484" y="19.5" text-anchor="end" class="mono" font-size="10.5" fill="#a1a1aa">↓ See Pinned Repos below</text>
     </g>
   </g>
 </svg>
